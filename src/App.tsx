@@ -1,11 +1,10 @@
 // App.tsx
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Header } from "./components/header";
 import { TaskList } from "./components/task-list";
 
-// const API_URL = "https://task-list-api-r9wz.onrender.com";
-const API_URL = "http://localhost:8000";
+const API_URL = "https://task-list-api-r9wz.onrender.com";
 
 export type Task = {
   id: string;
@@ -16,10 +15,10 @@ export type Task = {
 export function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     const res = await fetch(`${API_URL}/tasks`);
     return res.json();
-  };
+  }, []);
 
   const addTask = async (taskName: string) => {
     const newTask = {
@@ -39,7 +38,7 @@ export function App() {
 
   useEffect(() => {
     fetchTasks().then((data) => setTasks(data));
-  }, []);
+  }, [fetchTasks]);
 
   return (
     <div className="bg-gray-100 h-screen">
